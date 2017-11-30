@@ -1,0 +1,28 @@
+{
+    "name": "tyam/radarx",
+    "description": "My customization for radar php",
+    "keywords": [],
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/tyam/radarx",
+    "authors": [
+      {
+        "name": "YAMADA, Tetsuo",
+        "email": "tyam001@gmail.com"
+      }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "psr/log": "~1.0",
+        "radar/adr": "~1.0"
+    }, 
+    "require-dev": {
+    },
+    "autoload": {
+      "psr-4": {
+        "tyam\\radarx\\": "lib/"
+      }
+    }, 
+    "autoload-dev": {
+    }
+}
