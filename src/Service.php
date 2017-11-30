@@ -4,11 +4,10 @@
  *
  * アプリケーションの全コードから参照可能な基本サービスをまとめたクラス。
  * ロギングとPubSub。
- * tyam\radarxに移動のこと。
  *
  */
 
-namespace Custom;
+namespace tyam\radarx;
 
 use Psr\Log\LoggerInterface;
 
