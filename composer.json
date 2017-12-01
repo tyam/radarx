@@ -20,7 +20,7 @@
     },
     "autoload": {
       "psr-4": {
-        "tyam\\radarx\\": "lib/"
+        "tyam\\radarx\\": "src/"
       }
     }, 
     "autoload-dev": {
