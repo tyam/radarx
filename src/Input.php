@@ -77,7 +77,7 @@ class Input
     protected function promoteParameter($p, $v)
     {
         $form = $this->embedParameter($p, $v);
-        $cd = $this->converter->objectise([$p->getClass()->getName(), '__construct'], $form);
+        $cd = $this->converter->objectize([$p->getClass()->getName(), '__construct'], $form);
         if ($cd()) {
             return $cd->get();
         } else {
