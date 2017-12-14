@@ -15,7 +15,7 @@
         "php": ">=7.0.0",
         "psr/log": "~1.0",
         "radar/adr": "~1.0", 
-        "tyam/fadoc": "dev-master", 
+        "tyam/fadoc": "dev-master"
     }, 
     "require-dev": {
     },
