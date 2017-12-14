@@ -89,7 +89,7 @@ class Input
     {
         if ($p->getClass()) {
             $c = $p->getClass();
-            $ctr = $c->getConstructor($c);
+            $ctr = $c->getConstructor();
             $ps = $ctr->getParameters();
             $binding = $this->promoteParameter($ps[0], $v);
             return [$p->getName() => $binding];
