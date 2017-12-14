@@ -45,7 +45,7 @@ class Input
             case 'PUT': 
                 return $request->getParsedBody();
             default: 
-                return []
+                return [];
         }
     }
 
