@@ -52,7 +52,7 @@ class Input
     protected function collectDomainMethod(Request $request)
     {
         $domain = $request->getAttribute('radar/adr:route')->domain;
-        $c = new ReflectionClass($domain);
+        $c = new \ReflectionClass($domain);
         return $c->getMethod('__invoke');
     }
 
