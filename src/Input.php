@@ -11,7 +11,7 @@
  * となる。
  */
 
-namespace Web;
+namespace tyam\radarx;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use tyam\fadoc\Converter;
