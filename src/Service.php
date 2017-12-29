@@ -34,7 +34,8 @@ class Service
 
     public static function dispatch($event)
     {
-        self::$singleton->dispatcher($event);
+        $d = self::$singleton->dispatcher;
+        $d($event);
     }
 
     public static function debug($message, array $context = [])
