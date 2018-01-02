@@ -1,20 +1,19 @@
 <?php
 /**
- * ConsoleInput
+ * Input
  * 
- * コンソール固有のInput。
- * ルートにパラメータがあれば、それを出現順にリストアップし、最後にフォームを付加する。
- * フォームは、メソッドがHEAD、GET、DELETEの場合はクエリ文字列を、
- * メソッドがPOST、PATCH、PUTの場合はparsedBodyとする。
- * たとえば、GET /comment/3/12?format=jsonの場合であれば、抽出される入力は
- * `[3, 12, ['format' => 'json']]`
- * となる。
+ * 汎用Input。
+ * アクションメソッド（リンク層のオブジェクトの、典型的には__invoke()）に合った入力を見繕う。
+ * アクションメソッドの最後の引数はPayloadFactoryなので、作って渡す。
+ * アクションメソッドの後ろから2番目の引数はフォーム（ユーザ入力の配列）なので、HTTPメソッド等を解析して適切な配列を作って渡す。
+ * アクションメソッドの他の引数はURLパラメータで指定されるものなので、ルートで指定された同名のパラメータを読み取り、アクションメソッドが指定する型に変換して渡す。
  */
 
 namespace tyam\radarx;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use tyam\fadoc\Converter;
+use tyam\radarx\PayloadFactory;
 
 class Input
 {
@@ -27,10 +26,11 @@ class Input
 
     public function __invoke(Request $request)
     {
-        $args = $this->collectParameters($request);
+        $args = $this->collectArgs($request);
+        $cnt = count($args);
         $form = $this->collectForm($request);
-        $args[] = $form;
-        $args[] = new PayloadFactory($form);
+        $args[$cnt - 2] = $form;
+        $args[$cnt - 1] = new PayloadFactory($form);
         return $args;
     }
 
@@ -49,16 +49,29 @@ class Input
         }
     }
 
-    protected function collectDomainMethod(Request $request)
+    protected function resolveDomainMethod(Request $request)
     {
         $domain = $request->getAttribute('radar/adr:route')->domain;
-        $c = new \ReflectionClass($domain);
-        return $c->getMethod('__invoke');
+        if (! $domain) {
+            // domain not specified
+            throw new \RuntimeException('domain not specified.');
+        }
+        if (is_array($domain)) {
+            $cname = $domain[0];
+            $mname = $domain[1];
+        } else {
+            $cname = $domain;
+            $mname = '__invoke';
+        }
+        return [$cname, $mname];
     }
 
-    protected function collectParameters(Request $request)
+    protected function collectArgs(Request $request)
     {
-        $mref = $this->collectDomainMethod($request);
+        list($cname, $mname) = $this->resolveDomainMethod($request);
+        $cref = new \ReflectionClass($cname);
+        $mref = $cref->getMethod($mname);
+
         $ps = $mref->getParameters();
         $nps = count($ps);
         $params = [];
@@ -67,34 +80,21 @@ class Input
         // ここでは$paramNを集めるので後ろの2つは除外する。
         for ($i = 0; $i < $nps - 2; $i++) {
             $p = $ps[$i];
-            $val = $request->getAttribute(''.$i);
-            $params[] = $this->promoteParameter($p, $val);
+            $name = $p->getName();
+            $val = $request->getAttribute($name);
+            $params[$i] = $val;
         }
 
-        return $params;
-    }
+        // 残り2つの引数をダミーで埋める。
+        $params[$nps - 2] = [];  // array
+        $params[$nps - 1] = [[]];  // new PayloadFactory(array)
 
-    protected function promoteParameter($p, $v)
-    {
-        $form = $this->embedParameter($p, $v);
-        $cd = $this->converter->objectize([$p->getClass()->getName(), '__construct'], $form);
-        if ($cd()) {
-            return $cd->get();
-        } else {
-            return false;
+        // Converter::REPAIRフラッグを追加して変換すると、可逆性よりも「変換を成功させること」を優先してくれる。
+        $cd = $this->converter->objectize([$cname, $mname], $params, Converter::REPAIR);
+        if (! $cd()) {
+            // ルートの記載と、アクションメソッドの仕様に齟齬がある可能性が高い。
+            throw new \Exception('failed to call action method.  Potential inconsistency between a route definition and a domain-action definition: '.$cd->describe());
         }
-    }
-
-    protected function embedParameter($p, $v)
-    {
-        if ($p->getClass()) {
-            $c = $p->getClass();
-            $ctr = $c->getConstructor();
-            $ps = $ctr->getParameters();
-            $binding = $this->promoteParameter($ps[0], $v);
-            return [$p->getName() => $binding];
-        } else {
-            return [$p->getName() => $v];
-        }
+        return $cd->get();
     }
 }
