@@ -1,4 +1,9 @@
 <?php
+/**
+ * CsrfTokenHandler
+ * 
+ * psr-7 compliant CSRF token handler.
+ */
 
 namespace tyam\radarx;
 
@@ -7,6 +12,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class CsrfTokenHandler 
 {
+    /**
+     * @var session place to store a csrf token string.
+     */
     private $session;
 
     /**

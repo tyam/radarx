@@ -1,4 +1,9 @@
 <?php
+/**
+ * CsrfTokenHolder
+ *
+ * The place to hold the csrf token.
+ */
 
 namespace tyam\radarx;
 

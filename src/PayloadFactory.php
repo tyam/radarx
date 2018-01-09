@@ -1,4 +1,10 @@
 <?php
+/**
+ * PayloadFactory
+ *
+ * Payloadを作成するsnippetのクラス。
+ * 「どのオブジェクトが（extras）、どんな引数で（input）、何をして、どうなった（output）」になっている。
+ */
 
 namespace tyam\radarx;
 
