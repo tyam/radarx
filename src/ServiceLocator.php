@@ -28,6 +28,6 @@ class ServiceLocator
     
     public static function getInstance()
     {
-        return static::$service[get_called_class()];
+        return static::$services[get_called_class()];
     }
 }
