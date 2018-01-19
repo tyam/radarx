@@ -4,7 +4,7 @@
  * \Logger::debug($msg);
  */
 
-namespace radarx;
+namespace tyam\radarx;
 
 class ServiceLocator
 {
