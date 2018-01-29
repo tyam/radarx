@@ -15,16 +15,10 @@
         "php": ">=7.0.0",
         "psr/log": "~1.0",
         "radar/adr": "~1.0", 
-        "tyam/fadoc": "dev-master"
+        "tyam/fadoc": "*"
     }, 
     "require-dev": {
     },
-    "repositories": [
-        {
-            "type": "vcs", 
-            "url": "https://github.com/tyam/fadoc"
-        }
-    ], 
     "autoload": {
       "psr-4": {
         "tyam\\radarx\\": "src/"
