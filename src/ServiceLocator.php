@@ -1,5 +1,10 @@
 <?php
 /**
+ * ServiceLocator, after Laravel's facade
+ *
+ * A service locator is responsible to locate a system-wide service.
+ * With this class, you can define a service as a new class (like Laravel's facade).
+ *
  * new class('Logger', $logger) extends ServiceLocator {};
  * \Logger::debug($msg);
  */
