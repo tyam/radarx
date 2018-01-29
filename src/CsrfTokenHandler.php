@@ -2,7 +2,7 @@
 /**
  * CsrfTokenHandler
  * 
- * psr-7 compliant CSRF token handler.
+ * psr-7 compliant CSRF token handler middleware
  */
 
 namespace tyam\radarx;
