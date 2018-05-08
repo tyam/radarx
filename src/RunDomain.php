@@ -43,7 +43,8 @@ trait RunDomain
      */
     public function runDomain($spec, array $args) 
     {
-        $domain = $this->resolve($spec);
+        $resolve = $this->resolve;
+        $domain = $resolve($spec);
         $result = call_user_func_array($domain, $args);
         return $result;
     }
