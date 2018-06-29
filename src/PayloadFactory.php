@@ -55,6 +55,14 @@ class PayloadFactory
                               ->setMessages($errors);
     }
 
+    public function error($target, $errors): Payload 
+    {
+        return (new Payload())->setStatus(PayloadStatus::ERROR)
+                              ->setInput($this->input)
+                              ->setExtras($target)
+                              ->setMessages($errors);
+    }
+
     public function success($target, $output): Payload 
     {
         return (new Payload())->setStatus(PayloadStatus::SUCCESS)
